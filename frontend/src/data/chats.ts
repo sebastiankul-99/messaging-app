@@ -4,6 +4,18 @@ import {Chat, Status} from "./../types/chat"
 export var chat1: Chat = {
     id: "1",
     name: "Janusza Kowalski",
+    participants: [
+        {
+            id: "2",
+            firstName: "jerzy",
+            lastName: "kowal"
+        },
+        {
+            id: "30",
+            firstName: "Janusz",
+            lastName: "Kowalski",
+        }
+    ],
     messages:[
         {
             id:"1",
@@ -34,7 +46,7 @@ export var chat1: Chat = {
         {
             id:"3",
             user: {
-                id: "3",
+                id: "30",
                 firstName: "Janusz",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -48,7 +60,7 @@ export var chat1: Chat = {
         {
             id:"3",
             user: {
-                id: "3",
+                id: "30",
                 firstName: "Janusz",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -76,7 +88,7 @@ export var chat1: Chat = {
         {
             id:"3",
             user: {
-                id: "3",
+                id: "30",
                 firstName: "Janusz",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -103,7 +115,7 @@ export var chat1: Chat = {
         {
             id:"3",
             user: {
-                id: "3",
+                id: "30",
                 firstName: "Janusz",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -116,7 +128,7 @@ export var chat1: Chat = {
         {
             id:"3",
             user: {
-                id: "3",
+                id: "30",
                 firstName: "Janusz",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -129,7 +141,7 @@ export var chat1: Chat = {
         {
             id:"3",
             user: {
-                id: "3",
+                id: "30",
                 firstName: "Janusz",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -144,6 +156,18 @@ export var chat1: Chat = {
 export var chat2: Chat = {
     id: "2",
     name: "Dominika Kowalski",
+    participants: [
+        {
+            id: "2",
+            firstName: "jerzy",
+            lastName: "kowal"
+        },
+        {
+            id: "20",
+            firstName: "Dominik",
+            lastName: "Kowalski",
+        }
+    ],
     messages:[
         {
             id:"1",
@@ -174,7 +198,7 @@ export var chat2: Chat = {
         {
             id:"3",
             user: {
-                id: "5",
+                id: "20",
                 firstName: "Dominik",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -188,7 +212,7 @@ export var chat2: Chat = {
         {
             id:"3",
             user: {
-                id: "5",
+                id: "20",
                 firstName: "Dominik",
                 lastName: "Kowalski",
                 lastTimeOnline: new Date()
@@ -214,7 +238,7 @@ export var chat2: Chat = {
         },
 
         {
-            id:"3",
+            id:"20",
             user: {
                 id: "5",
                 firstName: "Dominik",
@@ -231,7 +255,7 @@ export var chat2: Chat = {
     ]
 }
 
-export var chat3: Chat = {
+/*export var chat3: Chat = {
     id: "3",
     name: "Dominik Kowalski",
     messages:[
@@ -1826,11 +1850,11 @@ export var chat16: Chat = {
 
         },
     ]
-}
+}*/
 
 export var exampleChats:Array<Chat> = [
     chat1,
-    chat2,
+    chat2,/*
     chat3,
     chat4,
     chat5,
@@ -1840,5 +1864,5 @@ export var exampleChats:Array<Chat> = [
     chat9,
     chat10,
     chat11,
-    chat12,
+    chat12,*/
 ]

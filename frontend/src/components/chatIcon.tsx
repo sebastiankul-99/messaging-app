@@ -25,14 +25,26 @@ const setIcon = (status:Status) =>{
     }
 }
 
-export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Chat, currentChat:Chat, setCurrentChat: (t:Chat) => void }) => {
+const handleClick = (chat:Chat, setCurrentChat: (t:Chat) => void,
+        searchUserChat:Chat|undefined, setSearchUserChat:(t:Chat|undefined) => void) => {
+    if(searchUserChat!== undefined && chat !== searchUserChat) {
+        setSearchUserChat(undefined)
+    }
+    setCurrentChat(chat)
+}
+export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Chat,
+    currentChat:Chat, setCurrentChat: (t:Chat) => void
+    searchUserChat:Chat|undefined, setSearchUserChat:(t:Chat|undefined) => void}) => {
 
     return (
-        <div style={{backgroundColor: props.chat === props.currentChat ? "cadetblue" : "white"}} onClick={ (e) =>{props.setCurrentChat(props.chat)}}>
+        <div style={{backgroundColor: props.chat === props.currentChat ? "cadetblue" : "white"}}
+             onClick={ (e) =>{handleClick(props.chat, props.setCurrentChat,
+                 props.searchUserChat, props.setSearchUserChat)}}>
             {/*<Paper>*/}
                 <Grid container marginTop="10px" marginLeft="5px" >
                     <Grid item md={2} sx={{  alignItems: 'end'}}>
-                        <IconButton onClick={()=> { props.setCurrentChat(props.chat)}} sx={{ p: 0 }}>
+                        <IconButton onClick={ (e) =>{handleClick(props.chat, props.setCurrentChat,
+                            props.searchUserChat, props.setSearchUserChat)}} sx={{ p: 0 }}>
                             <Avatar alt= {`${props.chat.name}`}
                                     src="/static/images/avatar/2.jpg" />
                         </IconButton>
@@ -61,12 +73,12 @@ export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Ch
                             color = 'black'
 
                         >
-                            {props.chat.messages[0].text}
+                            {props.chat.messages.length > 0 ? props.chat.messages[0].text :"Start new conversation"}
                         </Typography>
                     </Grid>
                     <Grid item md = {2} paddingRight="10px" sx={{display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'flex-end'}}>
                         {
-                            setIcon(props.chat.messages[props.chat.messages.length-1].status)
+                            props.chat.messages.length > 0 ? setIcon(props.chat.messages[props.chat.messages.length-1].status): ""
                         }
                         <Typography
                             variant="h6"
@@ -81,7 +93,7 @@ export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Ch
                                 verticalAlign: 'bottom',
                             }}
                         >
-                            {timeDifferenceString(props.chat.messages[props.chat.messages.length-1].timestamp)}
+                            {props.chat.messages.length > 0 ? timeDifferenceString(props.chat.messages[props.chat.messages.length-1].timestamp) :" "}
                         </Typography>
                     </Grid>
                 </Grid>

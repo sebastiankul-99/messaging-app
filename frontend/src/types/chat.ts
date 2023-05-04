@@ -1,3 +1,4 @@
+import {SearchUser} from "./search";
 
 export enum Status {
     SENT,
@@ -23,5 +24,6 @@ export type Message = {
 export type Chat = {
     id: string
     name: string,
+    participants: Array<SearchUser>
     messages: Array<Message>
 }

@@ -14,6 +14,7 @@ export const TextInput = (props: {
     setChats:(t:Array<Chat>) => void,
     currentChat:Chat,
     setCurrentChat:(t:Chat) => void
+    setSearchUserChat:(t:Chat|undefined) => void
 
 }) => {
     const[value, setValue] = useState("")
@@ -36,13 +37,18 @@ export const TextInput = (props: {
         let newCurrentChat:Chat = {
             id: props.currentChat.id,
             name: props.currentChat.name,
+            participants: props.currentChat.participants,
             messages: props.currentChat.messages
         }
         newCurrentChat.messages.push(newMessage)
         props.setCurrentChat(newCurrentChat)
         let newChats:Array<Chat> = new Array<Chat>(newCurrentChat);
         const idx = props.chats.indexOf(props.currentChat)
-        props.chats.splice(idx,1)
+        if(idx === -1) {
+            props.setSearchUserChat(undefined)
+        } else {
+            props.chats.splice(idx,1)
+        }
         newChats = newChats.concat(props.chats)
         props.setChats(newChats);
         setValue("")

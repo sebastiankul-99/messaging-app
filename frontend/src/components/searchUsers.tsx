@@ -4,7 +4,38 @@ import TextField from '@mui/material/TextField';
 import "./../App.css"
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-export const SearchUsers = () => {
+import {useEffect, useState} from "react";
+import {SearchUser} from "../types/search";
+import {Chat} from "../types/chat";
+
+
+
+const getUsers = async (name:string, setSearchUsers: (t:Array<SearchUser>) => void)=>{
+
+    if(name !==""){
+        await fetch(`http://localhost:9091/search?name=${name}`, {
+            method: "GET",
+            credentials: "include",
+        })
+            .then((response) => response.json())
+            .then((content:Array<SearchUser>) =>{
+                console.log(content)
+                setSearchUsers(content)
+                // setRate(Number(content.rate));
+            });
+    }
+}
+
+export const SearchUsers = (props: {searchUsers:Array<SearchUser>, setSearchUsers: (t:Array<SearchUser>) => void}) => {
+
+    const[valueInput, setValueInput] = useState<string>("")
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            getUsers(valueInput, props.setSearchUsers)
+        }, 350);
+
+        return () => clearTimeout(timer);
+    }, [valueInput])
     return (
 
         <Box
@@ -15,7 +46,13 @@ export const SearchUsers = () => {
             alignItems="center"
             margin="auto"
         >
-            <TextField sx = {{width: "90%"}}
+            <TextField value = {valueInput} sx = {{width: "90%"}} onBlur={(e)=>{
+                setTimeout(() => {
+                    props.setSearchUsers([]); }, 2000)
+                    setValueInput("")
+               }}
+                       onChange={(e) => setValueInput(e.target.value)}
+
                        className="inputRounded" label="search users" variant="outlined"
                        InputProps={{
                            startAdornment: (

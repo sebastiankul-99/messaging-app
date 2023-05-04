@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {createRef, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {
     SignInPostResponseBody,
 } from "../types/signing";
@@ -15,8 +15,22 @@ import {ChatIcon} from "./chatIcon";
 import {TextInput} from "./input"
 import {MessageLeft, MessageRight} from "./message";
 import {SearchUsers} from "./searchUsers";
+import {SearchUser} from "../types/search";
+import {SearchUserIcon} from "./searchUserIcon";
 
-
+const makeLine = (searchUsers:Array<SearchUser>) => {
+    if(searchUsers.length >0) {
+        return <hr style={{width:"100%", color: "black"}}></hr>
+    }
+}
+const setSearchChatDiv = (searchChat:Chat|undefined, user:SignInPostResponseBody|undefined, currentChat:Chat,
+                       setCurrentChat: (t:Chat)=>void, searchUserChat:Chat|undefined,
+                          setSearchUserChat: (t:Chat|undefined) =>void) =>{
+    if (searchChat !== undefined) {
+        return <ChatIcon key={searchChat.id} user={user} chat={searchChat}
+                         currentChat={currentChat} setCurrentChat={setCurrentChat} searchUserChat={searchUserChat} setSearchUserChat={setSearchUserChat}/>
+    }
+}
 const whichMessage = (user: SignInPostResponseBody|undefined, message:Message) => {
     if (user?.id === message.user.id){
         return <MessageRight message={message}/>
@@ -26,6 +40,8 @@ const whichMessage = (user: SignInPostResponseBody|undefined, message:Message) =
 }
 export const Home = () => {
     const [user, setUser] = useState<SignInPostResponseBody>();
+    const [searchUsers, setSearchUsers] = useState<Array<SearchUser>>([])
+    const [searchUserChat, setSearchUserChat] = useState<Chat>()
     const [userAccessToken, setUserAccessToken] = useState("")
     const [chats, setChats] = useState<Array<Chat>>(exampleChats);
     const [currentChat, setCurrentChat] = useState<Chat>(chat1)
@@ -62,7 +78,7 @@ export const Home = () => {
                             <Grid container>
                                 <Grid item xs = {12} width = "200%"
                                       bgcolor="white" marginTop="4%" marginBottom="4%">
-                                    <SearchUsers/>
+                                    <SearchUsers searchUsers={searchUsers} setSearchUsers={setSearchUsers}/>
                                 </Grid>
                                 <Grid item xs = {12} bgcolor="white"sx={{
                                     mb: 2,
@@ -73,9 +89,27 @@ export const Home = () => {
                                     overflowY: "scroll",
                                     // justifyContent="flex-end" # DO NOT USE THIS WITH 'scroll'
                                 }}>
-
                                     {
-                                        chats.map( (c)=> <ChatIcon key={c.id} user={user} chat={c} currentChat={currentChat} setCurrentChat={setCurrentChat}/>)
+                                        searchUsers.map((u) =><SearchUserIcon user={user} searchUser={u}
+                                                                              chats={chats} currentChat={currentChat}
+                                                                              setCurrentChat={setCurrentChat}
+                                                                              setSearchUsers={setSearchUsers}
+                                                                              searchChat={searchUserChat}
+                                                                              setSearchChat={setSearchUserChat}/>)
+                                    }
+                                    {
+                                        makeLine(searchUsers)
+                                    }
+                                    {
+                                        setSearchChatDiv(searchUserChat, user,currentChat,setCurrentChat,
+                                            searchUserChat, setSearchUserChat)
+                                    }
+                                    {
+                                        chats.map( (c)=> <ChatIcon key={c.id} user={user} chat={c}
+                                                                   currentChat={currentChat}
+                                                                   setCurrentChat={setCurrentChat}
+                                                                   searchUserChat={searchUserChat}
+                                                                   setSearchUserChat={setSearchUserChat}/>)
                                     }
                                 </Grid>
                             </Grid>
@@ -100,7 +134,10 @@ export const Home = () => {
                                     <div ref={messagesEndRef}/>
                                 </Grid>
                                 <Grid className="input-div" xs = {12}>
-                                    <TextInput user={user} chats={chats} setChats={setChats} currentChat={currentChat} setCurrentChat={setCurrentChat}/>
+                                    <TextInput user={user} chats={chats} setChats={setChats}
+                                               currentChat={currentChat} setCurrentChat={setCurrentChat}
+                                               setSearchUserChat={setSearchUserChat}
+                                    />
                                 </Grid>
                             </Grid>
 
