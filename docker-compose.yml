@@ -8,3 +8,15 @@ services:
     restart: always
     ports:
       - '5432:5432'
+
+  chat-db:
+    build:
+      context: ./chat-db
+    container_name: chat-db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "user"
+      MONGO_INITDB_ROOT_PASSWORD: "pass"
+      MONGO_INITDB_DATABASE: "chatapp"
+    ports:
+      - 27017:27017

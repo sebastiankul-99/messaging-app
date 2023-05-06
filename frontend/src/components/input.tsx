@@ -8,6 +8,33 @@ import {undefinedStringToString} from "../utils/signUp";
 import {Chat, Message, Status, WebSocketMessage} from "../types/chat";
 import { v4 as uuidv4 } from "uuid";
 
+const sendNewChat = async (chat: Chat) => {
+    const response = await fetch(`http://localhost:6020/chat`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(chat),
+    }).catch(e=>{
+        console.log("error: ",e)
+    })
+
+}
+const sendNewMessage = async (chatId: string, newMessage:Message) => {
+    const response = await fetch(`http://localhost:6020/message`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            chatId: chatId,
+            message: newMessage
+        }),
+    }).catch(e=>{
+        console.log("error: ",e)
+    })
+
+}
 export const TextInput = (props: {
     user:SignInPostResponseBody| undefined,
     chats:Array<Chat>,
@@ -46,8 +73,13 @@ export const TextInput = (props: {
         let newChats:Array<Chat> = new Array<Chat>(newCurrentChat);
         const idx = props.chats.indexOf(props.currentChat)
         if(idx === -1) {
+            console.log("sendinggg ")
+            console.log(newCurrentChat)
+            console.log("w funkcji")
+            await sendNewChat(newCurrentChat)
             props.setSearchUserChat(undefined)
         } else {
+            await sendNewMessage(newCurrentChat.id, newMessage)
             props.chats.splice(idx,1)
         }
         newChats = newChats.concat(props.chats)

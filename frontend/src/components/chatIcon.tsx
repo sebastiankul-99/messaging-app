@@ -101,7 +101,7 @@ export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Ch
                                 verticalAlign: 'bottom',
                             }}
                         >
-                            {props.chat.messages.length > 0 ? timeDifferenceString(props.chat.messages[props.chat.messages.length-1].timestamp) :" "}
+                            {props.chat.messages.length > 0 ? timeDifferenceString(new Date(props.chat.messages[props.chat.messages.length-1].timestamp)) :" "}
                         </Typography>
                     </Grid>
                 </Grid>

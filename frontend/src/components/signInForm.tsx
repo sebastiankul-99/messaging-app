@@ -52,7 +52,6 @@ export const SignInForm = ( props: { setUserAccessToken:(t:string) => void,
         console.log(postBody);
         const response = await fetch(`http://localhost:9090/singin`, {
             method: "POST",
-            credentials: "include",
             body: JSON.stringify(postBody),
         }).then(async response => {
             if (response.ok) {

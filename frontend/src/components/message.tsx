@@ -11,7 +11,9 @@ export const MessageLeft = (props : {
         message: Message
 }) => {
     const message = props.message ? props.message.text : "no message";
-    const timestamp = props.message.timestamp.toDateString() ? props.message.timestamp.toDateString() : "";
+
+
+    const timestamp = props.message.timestamp ? new Date(props.message.timestamp).toDateString() : "";
     const photoURL = props.message.user.firstName
     const displayName = props.message.user.firstName
 
@@ -67,7 +69,7 @@ export const MessageRight = (props : {
     message: Message
 }) => {
     const message = props.message ? props.message.text : "no message";
-    const timestamp = props.message.timestamp ? props.message.timestamp.toDateString() : "";
+    const timestamp = props.message.timestamp ? new Date(props.message.timestamp).toDateString() : "";
     return (
         <div className="messageRowRight">
             <Grid className="messageOrange" maxWidth="70%">

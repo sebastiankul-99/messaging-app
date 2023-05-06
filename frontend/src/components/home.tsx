@@ -45,6 +45,25 @@ const whichMessage = (user: SignInPostResponseBody|undefined, message:Message) =
     }
 }
 
+const fetchChats = async (id:string, setUserChats: (t:Array<Chat>) =>void, setUserCurrentChat:(t:Chat)=>void) => {
+    const response = await fetch(`http://localhost:6020/user/${id}`, {
+        method: "GET",
+    }).then(async response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            let body = await response.json()
+            throw new Error("Error");
+        }
+    }).then((data: Array<Chat>) => {
+        setUserChats(data)
+        if (data.length >0) {
+            setUserCurrentChat(data[0])
+        }
+    }).catch((error: Error) => {
+    })
+};
+
 export const Home = () => {
     const [user, setUser] = useState<SignInPostResponseBody>();
     const [searchUsers, setSearchUsers] = useState<Array<SearchUser>>([])
@@ -55,6 +74,12 @@ export const Home = () => {
     const [currentChat, setCurrentChat] = useState<Chat>(chat1)
     const [sentMessage, setSentMessage] = useState<WebSocketMessage>()
     const messagesEndRef = useRef<null | HTMLDivElement>(null)
+    useEffect(()=> {
+        if(user !==undefined) {
+            fetchChats(user.id, setChats, setCurrentChat)
+        }
+
+    },[user])
     useEffect(()=> {
         if(user !==undefined) {
             socket = io(ENDPOINT)
