@@ -10,13 +10,19 @@ import {CustomNavbar} from "./customNavbar";
 import Grid from '@mui/material/Grid';
 import {Paper, Stack} from "@mui/material";
 import {chat1, chat2, exampleChats} from "../data/chats";
-import {Chat, Message, User} from "../types/chat";
+import {Chat, Message, Status, User, WebSocketMessage} from "../types/chat";
 import {ChatIcon} from "./chatIcon";
 import {TextInput} from "./input"
 import {MessageLeft, MessageRight} from "./message";
 import {SearchUsers} from "./searchUsers";
 import {SearchUser} from "../types/search";
 import {SearchUserIcon} from "./searchUserIcon";
+
+import io, {Socket} from 'socket.io-client'
+import {v4 as uuidv4} from "uuid";
+import {undefinedStringToString} from "../utils/signUp";
+const ENDPOINT = "http://localhost:4000/"
+var socket: Socket<any, any>;
 
 const makeLine = (searchUsers:Array<SearchUser>) => {
     if(searchUsers.length >0) {
@@ -38,14 +44,103 @@ const whichMessage = (user: SignInPostResponseBody|undefined, message:Message) =
         return <MessageLeft message={message}/>
     }
 }
+
 export const Home = () => {
     const [user, setUser] = useState<SignInPostResponseBody>();
     const [searchUsers, setSearchUsers] = useState<Array<SearchUser>>([])
+    const [connectedToSocket, setConnectedToSocket] = useState<boolean>(false)
     const [searchUserChat, setSearchUserChat] = useState<Chat>()
     const [userAccessToken, setUserAccessToken] = useState("")
     const [chats, setChats] = useState<Array<Chat>>(exampleChats);
     const [currentChat, setCurrentChat] = useState<Chat>(chat1)
+    const [sentMessage, setSentMessage] = useState<WebSocketMessage>()
     const messagesEndRef = useRef<null | HTMLDivElement>(null)
+    useEffect(()=> {
+        if(user !==undefined) {
+            socket = io(ENDPOINT)
+            socket.emit("setup", user)
+            socket.on('connection',() => {
+                setConnectedToSocket(true)
+            })
+        }
+
+    },[user])
+    useEffect(()=> {
+        if(user!==undefined){
+            socket.emit('join-chat',currentChat.id)
+        }
+
+    },[currentChat,user])
+
+    useEffect(()=>{
+        if(user !== undefined){
+            socket.on("message-received", (messageReceived:WebSocketMessage) => {
+                console.log("message received", messageReceived)
+                const newMessage:Message = {
+                    id: uuidv4(),
+                    user: {
+                        id: messageReceived.sender.id,
+                        firstName: messageReceived.sender.firstName,
+                        lastName: messageReceived.sender.lastName,
+                    },
+                    status: Status.DELIVERED,
+                    text: messageReceived.text,
+                    timestamp: new Date(messageReceived.timestamp)
+                }
+                let chatLists:Array<Chat> = structuredClone(chats)
+                let index = -1
+                for (let i = 0; i < chatLists.length; i++) {
+                    if(chatLists[i].id === messageReceived.chat.id) {
+                        index = i;
+                        break;
+                    }
+                }
+                let newChat:Chat;
+                if(index !== -1) {
+                    newChat = structuredClone(chatLists[index])
+                    newChat.messages.push(newMessage)
+                    chatLists.splice(index, 1)
+                } else {
+                    newChat = {
+                        id: messageReceived.chat.id,
+                        name: `${messageReceived.sender.firstName} ${messageReceived.sender.lastName}`,
+                        participants: [
+                            {
+                                id: messageReceived.sender.id,
+                                firstName: messageReceived.sender.firstName,
+                                lastName: messageReceived.sender.lastName
+
+                            },
+                            {
+                                id: undefinedStringToString(user?.id),
+                                firstName: undefinedStringToString(user?.firstName),
+                                lastName: undefinedStringToString(user?.lastName),
+
+                            }
+                        ],
+                        messages: [
+                            newMessage
+                        ]
+                    }
+                }
+                let tempChat = [newChat]
+                tempChat = tempChat.concat(chatLists)
+                setChats(tempChat)
+                if(currentChat.id === messageReceived.chat.id) {
+                    setCurrentChat(newChat)
+                }
+            })
+        }
+
+
+    })
+    useEffect(()=> {
+        if(sentMessage!==undefined ){
+            socket.emit('new-message',sentMessage)
+        }
+
+    },[sentMessage])
+
     const scrollToBottom = () => {
         if(messagesEndRef.current !==null) {
 
@@ -116,7 +211,7 @@ export const Home = () => {
 
 
                         </Grid>
-                        <Grid item xs={8} md={6} className = "message-container" >
+                        <Grid item xs={8} md={6} className = "message-container" sx={{border: "1px solid grey"}}>
                             <Grid container >
                                 <Grid item className="message-body" xs={12} sx={{
                                     mb: 2,
@@ -133,10 +228,11 @@ export const Home = () => {
                                     }
                                     <div ref={messagesEndRef}/>
                                 </Grid>
-                                <Grid className="input-div" xs = {12}>
+                                <Grid className="input-div" xs = {12} >
                                     <TextInput user={user} chats={chats} setChats={setChats}
                                                currentChat={currentChat} setCurrentChat={setCurrentChat}
                                                setSearchUserChat={setSearchUserChat}
+                                               setSentMessage={setSentMessage}
                                     />
                                 </Grid>
                             </Grid>
@@ -151,7 +247,7 @@ export const Home = () => {
                             overflowY: "scroll",
                             // justifyContent="flex-end" # DO NOT USE THIS WITH 'scroll'
                         }} >
-                            <Paper>xs=4</Paper>
+
                         </Grid>
                     </Grid>
                 </Stack>

@@ -11,8 +11,7 @@ import {timeDifferenceString} from "../utils/time";
 import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import Paper from '@mui/material/Paper';
-import {chat1} from "../data/chats";
+
 const theme = createTheme();
 
 const setIcon = (status:Status) =>{
@@ -30,6 +29,13 @@ const handleClick = (chat:Chat, setCurrentChat: (t:Chat) => void,
     if(searchUserChat!== undefined && chat !== searchUserChat) {
         setSearchUserChat(undefined)
     }
+    if(chat.messages.length>0) {
+        if(chat.messages[chat.messages.length-1].status === Status.DELIVERED &&
+            chat.messages[chat.messages.length-1].user.id !== searchUserChat?.id) {
+            chat.messages[chat.messages.length-1].status = Status.SEEN
+        }
+    }
+
     setCurrentChat(chat)
 }
 export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Chat,
@@ -49,7 +55,9 @@ export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Ch
                                     src="/static/images/avatar/2.jpg" />
                         </IconButton>
                     </Grid>
-                    <Grid item md={8}  >
+                    <Grid item md={8}  sx={{
+                        display: {xs: 'none', md: 'grid'}
+                    }}>
                         <Typography
                             variant="h6"
                             noWrap
@@ -71,18 +79,18 @@ export const ChatIcon = (props: { user:SignInPostResponseBody|undefined, chat:Ch
                             fontFamily = 'sans-serif'
                             fontWeight = '300'
                             color = 'black'
-
                         >
-                            {props.chat.messages.length > 0 ? props.chat.messages[0].text :"Start new conversation"}
+                            {props.chat.messages.length > 0 ? props.chat.messages[0].text :"Starting new conversation"}
                         </Typography>
                     </Grid>
-                    <Grid item md = {2} paddingRight="10px" sx={{display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'flex-end'}}>
+                    <Grid item md = {2} paddingRight="10px" sx={{display: { xs: 'none', md: 'flex' }, flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'flex-end'}}>
                         {
                             props.chat.messages.length > 0 ? setIcon(props.chat.messages[props.chat.messages.length-1].status): ""
                         }
                         <Typography
                             variant="h6"
                             noWrap
+
                             sx={{
                                 display: { xs: 'none', md: 'flex' },
                                 fontSize: '2vh',

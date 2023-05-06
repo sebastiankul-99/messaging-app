@@ -9,12 +9,7 @@ import {Chat} from "../types/chat";
 import IconButton from "@mui/material/IconButton";
 import {SearchUser} from "../types/search";
 import {undefinedStringToString} from "../utils/signUp";
-
-function getRandomInt(min:number, max:number) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-}
+import {v4 as uuidv4} from "uuid";
 
 const handleClick = (chats:Array<Chat>, searchUser:SearchUser,
                      setSearchChat: (t:Chat) => void, setCurrentChat:(t:Chat) => void,
@@ -30,7 +25,7 @@ const handleClick = (chats:Array<Chat>, searchUser:SearchUser,
         }
     }
     const chat:Chat = {
-        id: getRandomInt(10,100000).toString(),
+        id: uuidv4(),
         name: `${searchUser.firstName} ${searchUser.lastName}`,
         participants: [
             {

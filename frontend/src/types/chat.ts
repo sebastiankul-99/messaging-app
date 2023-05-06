@@ -10,7 +10,7 @@ export type User = {
     id: string,
     firstName: string,
     lastName: string,
-    lastTimeOnline: Date
+    lastTimeOnline?: Date
 }
 
 export type Message = {
@@ -26,4 +26,17 @@ export type Chat = {
     name: string,
     participants: Array<SearchUser>
     messages: Array<Message>
+}
+
+export type WebSocketChat = {
+    id: string
+    participants: Array<string>
+}
+
+export type WebSocketMessage = {
+    id: string,
+    chat: WebSocketChat,
+    sender: User
+    text: string,
+    timestamp: Date
 }

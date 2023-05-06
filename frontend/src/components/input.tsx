@@ -5,8 +5,8 @@ import Button from '@mui/material/Button';
 import Box from "@mui/material/Box";
 import {SignInPostResponseBody} from "../types/signing";
 import {undefinedStringToString} from "../utils/signUp";
-import {Chat, Message, Status} from "../types/chat";
-
+import {Chat, Message, Status, WebSocketMessage} from "../types/chat";
+import { v4 as uuidv4 } from "uuid";
 
 export const TextInput = (props: {
     user:SignInPostResponseBody| undefined,
@@ -15,6 +15,7 @@ export const TextInput = (props: {
     currentChat:Chat,
     setCurrentChat:(t:Chat) => void
     setSearchUserChat:(t:Chat|undefined) => void
+    setSentMessage: (t:WebSocketMessage|undefined) =>void
 
 }) => {
     const[value, setValue] = useState("")
@@ -23,7 +24,7 @@ export const TextInput = (props: {
         const data = new FormData(event.currentTarget);
         const textMessage:string = undefinedStringToString(data.get('input-text')?.toString())
         const newMessage:Message = {
-            id: "safas",
+            id: uuidv4(),
             user: {
                 id: undefinedStringToString(props.user?.id),
                 firstName: undefinedStringToString(props.user?.firstName),
@@ -52,6 +53,21 @@ export const TextInput = (props: {
         newChats = newChats.concat(props.chats)
         props.setChats(newChats);
         setValue("")
+        let participantIds:Array<string> = new Array(0);
+        newCurrentChat.participants.forEach((user)=>{
+            participantIds.push(user.id)
+        })
+        const sentMessage:WebSocketMessage = {
+            id: newMessage.id,
+            chat: {
+                id: newCurrentChat.id,
+                participants: participantIds,
+            },
+            sender: newMessage.user,
+            text: newMessage.text,
+            timestamp: newMessage.timestamp
+        }
+        props.setSentMessage(sentMessage)
 
 
 
