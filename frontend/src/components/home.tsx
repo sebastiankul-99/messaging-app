@@ -8,8 +8,8 @@ import './../styles/home.css';
 import {SignInForm} from "./signInForm";
 import {CustomNavbar} from "./customNavbar";
 import Grid from '@mui/material/Grid';
-import {Paper, Stack} from "@mui/material";
-import {chat1, chat2, exampleChats} from "../data/chats";
+import {Stack} from "@mui/material";
+import {chat1,} from "../data/chats";
 import {Chat, Message, Status, User, WebSocketMessage} from "../types/chat";
 import {ChatIcon} from "./chatIcon";
 import {TextInput} from "./input"

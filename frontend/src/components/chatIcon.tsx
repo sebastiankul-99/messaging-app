@@ -2,7 +2,6 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import {createTheme} from '@mui/material/styles';
 import {SignInPostResponseBody,} from "../types/signing";
 import './../App.css';
 import {Chat, Status} from "../types/chat";
@@ -11,8 +10,6 @@ import {timeDifferenceString} from "../utils/time";
 import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-
-const theme = createTheme();
 
 const setIcon = (status:Status) =>{
     if (status === Status.SENT) {

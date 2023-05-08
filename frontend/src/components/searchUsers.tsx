@@ -6,8 +6,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import {useEffect, useState} from "react";
 import {SearchUser} from "../types/search";
-import {Chat} from "../types/chat";
-
 
 
 const getUsers = async (name:string, setSearchUsers: (t:Array<SearchUser>) => void)=>{
@@ -21,7 +19,6 @@ const getUsers = async (name:string, setSearchUsers: (t:Array<SearchUser>) => vo
             .then((content:Array<SearchUser>) =>{
                 console.log(content)
                 setSearchUsers(content)
-                // setRate(Number(content.rate));
             });
     }
 }
