@@ -21,9 +21,15 @@ type RefreshAccessTokenRequest struct {
 }
 
 type RefreshAccessTokenResponse struct {
-	AccessToken               string    `json:"-" db:"-"`
-	RefreshToken              string    `json:"refreshToken" db:"refreshed_token"`
+	AccessToken               string    `json:"accessToken" db:"-"`
+	RefreshToken              string    `json:"-" db:"refreshed_token"`
 	AccessTokenExpirationDate time.Time `json:"accessTokenExpirationDate" db:"-"`
+	ID                        string    `json:"id" db:"id"`
+	SessionID                 string    `json:"-" db:"-"`
+	SessionExpirationDate     time.Time `json:"-" db:"-"`
+	FirstName                 string    `json:"firstName" db:"first_name"`
+	LastName                  string    `json:"lastName" db:"last_name"`
+	Email                     string    `json:"email" db:"email"`
 }
 
 type ValidateAccessTokenRequest struct {
@@ -38,6 +44,7 @@ type ValidateAccessTokenResponse struct {
 type SessionRepository interface {
 	CreateSession(ctx context.Context, session *Session) (*Session, error)
 	GetSessionById(ctx context.Context, sessionId int) (*Session, error)
+	GetUserById(ctx context.Context, id int) (*RefreshAccessTokenResponse, error)
 }
 
 type SessionService interface {

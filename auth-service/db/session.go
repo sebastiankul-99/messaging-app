@@ -35,3 +35,13 @@ func (r *repository) GetSessionById(ctx context.Context, sessionId int) (*models
 
 	return &s, nil
 }
+
+func (r *repository) GetUserById(ctx context.Context, id int) (*models.RefreshAccessTokenResponse, error) {
+	u := &models.RefreshAccessTokenResponse{}
+	query := "SELECT first_name, last_name, email FROM users WHERE id = $1"
+	err := r.db.QueryRowContext(ctx, query, id).Scan(&u.FirstName, &u.LastName, &u.Email)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}

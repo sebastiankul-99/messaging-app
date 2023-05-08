@@ -64,16 +64,35 @@ const fetchChats = async (id:string, setUserChats: (t:Array<Chat>) =>void, setUs
     })
 };
 
+const refreshAccess = async (setCurrentUser: (t: SignInPostResponseBody | undefined) => void) => {
+    const response = await fetch(`http://localhost:9090/refresh`, {
+        method: "GET",
+        credentials: 'include'
+    }).then(async response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            let body = await response.json()
+            throw new Error("Error");
+        }
+    }).then((data:SignInPostResponseBody)=> {
+        setCurrentUser(data)
+    })
+}
 export const Home = () => {
     const [user, setUser] = useState<SignInPostResponseBody>();
     const [searchUsers, setSearchUsers] = useState<Array<SearchUser>>([])
     const [connectedToSocket, setConnectedToSocket] = useState<boolean>(false)
     const [searchUserChat, setSearchUserChat] = useState<Chat>()
     const [userAccessToken, setUserAccessToken] = useState("")
-    const [chats, setChats] = useState<Array<Chat>>(exampleChats);
+    const [chats, setChats] = useState<Array<Chat>>([]);
     const [currentChat, setCurrentChat] = useState<Chat>(chat1)
     const [sentMessage, setSentMessage] = useState<WebSocketMessage>()
     const messagesEndRef = useRef<null | HTMLDivElement>(null)
+    useEffect(()=> {
+        refreshAccess(setUser)
+
+    },[])
     useEffect(()=> {
         if(user !==undefined) {
             fetchChats(user.id, setChats, setCurrentChat)

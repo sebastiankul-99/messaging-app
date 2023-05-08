@@ -52,6 +52,7 @@ export const SignInForm = ( props: { setUserAccessToken:(t:string) => void,
         console.log(postBody);
         const response = await fetch(`http://localhost:9090/singin`, {
             method: "POST",
+            credentials: 'include',
             body: JSON.stringify(postBody),
         }).then(async response => {
             if (response.ok) {
@@ -113,6 +114,7 @@ export const SignInForm = ( props: { setUserAccessToken:(t:string) => void,
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
+
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -124,6 +126,7 @@ export const SignInForm = ( props: { setUserAccessToken:(t:string) => void,
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+
                                 />
                             </Grid>
                         </Grid>
@@ -138,7 +141,7 @@ export const SignInForm = ( props: { setUserAccessToken:(t:string) => void,
                                 variant="contained"
                                 sx={{ mt: 2, mb: 2 }}
                             >
-                                Sign Up
+                                Sign In
                             </Button>
                         </Grid>
 

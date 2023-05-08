@@ -64,6 +64,17 @@ func (s *sessionService) RefreshAccessToken(c context.Context, req *models.Refre
 	if err != nil {
 		return nil, err
 	}
+
+	usr, err := s.repository.GetUserById(ctx, sessionId)
+	fmt.Println("USer :", usr)
+	res.Email = usr.Email
+	res.FirstName = usr.FirstName
+	res.LastName = usr.LastName
+	res.ID = strconv.Itoa(sessionId)
+
+	if err != nil {
+		return nil, err
+	}
 	log.Println("ses: ", ses)
 	if ses.ExpiresAt.Before(time.Now()) {
 		return nil, fmt.Errorf("access token expired")

@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const sendNewChat = async (chat: Chat) => {
     const response = await fetch(`http://localhost:6020/chat`, {
-        method: "POST",
+        method: "GET",
         headers: {
             'Content-Type': 'application/json',
         },
@@ -115,7 +115,9 @@ export const TextInput = (props: {
                     name="input-text"
                     value={value}
                     style = {{width: "100%"}}
-                    onChange={(e)=>setValue(e.target.value)}
+                    autoComplete='off'
+                    onChange={(e)=>setValue(e.target.value)
+                }
                 />
                 <Button type="submit" variant="contained" color="primary" >
                     <SendIcon />

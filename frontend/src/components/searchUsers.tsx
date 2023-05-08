@@ -45,6 +45,8 @@ export const SearchUsers = (props: {searchUsers:Array<SearchUser>, setSearchUser
             justifyContent="center"
             alignItems="center"
             margin="auto"
+            autoComplete='off'
+            onSubmit={(e)=>{e.preventDefault()}}
         >
             <TextField value = {valueInput} sx = {{width: "90%"}} onBlur={(e)=>{
                 setTimeout(() => {

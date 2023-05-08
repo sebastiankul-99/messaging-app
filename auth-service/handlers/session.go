@@ -38,6 +38,7 @@ func (h *SessionHandler) RefreshAccess(c *gin.Context) {
 		c.SetCookie("quetal-refresh-token", res.RefreshToken, 60*60*24*30, "/", "localhost", false, true)
 	}
 	c.Header("quetal-access-token", res.AccessToken)
+	res.AccessToken = ""
 	c.JSON(http.StatusOK, res)
 }
 

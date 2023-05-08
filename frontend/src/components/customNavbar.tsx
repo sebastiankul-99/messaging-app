@@ -16,7 +16,7 @@ import {useState} from "react";
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import {SignInPostResponseBody} from "../types/signing";
-
+import InsertCommentIcon from '@mui/icons-material/InsertComment';
 export const CustomNavbar = (props: {user?:SignInPostResponseBody, setUserAccessToken: (t:string) => void,
     setUser: (t:undefined) => void
 }) => {
@@ -51,7 +51,7 @@ export const CustomNavbar = (props: {user?:SignInPostResponseBody, setUserAccess
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                    <InsertCommentIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
