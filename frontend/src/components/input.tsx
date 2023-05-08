@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const sendNewChat = async (chat: Chat) => {
     const response = await fetch(`http://localhost:6020/chat`, {
-        method: "GET",
+        method: "POST",
         headers: {
             'Content-Type': 'application/json',
         },
