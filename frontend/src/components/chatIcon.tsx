@@ -15,9 +15,9 @@ const setIcon = (status:Status) =>{
     if (status === Status.SENT) {
         return <DoneOutlineOutlinedIcon sx={{ color: "#B6B2B2" }}/>
     } else if (status === Status.DELIVERED) {
-        return <DoneIcon sx={{ color: "black" }}/>
+        return <DoneIcon />
     } else {
-        return <DoneAllIcon color="secondary"/>
+        return <DoneAllIcon sx={{ color: "B6B2B2" }}/>
     }
 }
 
